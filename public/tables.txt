@@ -1,0 +1,121 @@
+//table users
+
+
+create table users(
+u_fname varchar(15) not null,
+u_lname varchar(15) not null,
+u_pasword varchar(15) not null,
+u_email varchar(15),
+u_dob date not null,
+u_contact number(10),
+created date not null,
+primary key(u_fname,u_lname),
+);
+
+//table patient details
+
+create table patient(
+p_pid varchar(12) primary key,
+p_first_name varchar(55) not null,
+p_last_name varchar(55) not null,
+p_father_name varchar(15) not null,
+p_mother_name varchar(15) not null,
+p_dob date not null,
+p_sex int not null,
+p_address_street varchar(255) not null,
+p_address_pincode varchar(6) not null,
+p_address_state varchar(40) not null,
+p_address_country varchar(40) not null,
+p_contact varchar(10) ,
+created date not null,
+);
+
+//table history
+
+create table history(
+p_pid varchar(12),
+p_genetic_problem varchar(255),
+p_smoke tinyint,
+p_alcohol tinyint,
+p_betel tinyint,
+p_spicy tinyint,
+p_junk tinyint,
+p_less_sleep tinyint,
+primary key(p_pid)
+);
+
+//table vitals
+
+
+create table vitals(
+vit_id varchar(12) not null,
+p_pid varchar(12) not null,
+p_bp_systole int,
+p_bp_diastole int,
+p_temperature float(3,2),
+p_pulse int,
+p_respSys varchar(255),
+created date not null,
+primary key(vit_id,p_pid)
+// table investigation 
+
+
+create table investigation(
+inv_id varchar(12) not null,
+p_pid varchar(12) not null,
+created date not null,
+p_rbs tinyint,
+p_cbp tinyint,
+p_fbs tinyint,
+p_plbs tinyint,
+p_ecg tinyint,
+p_xray tinyint,
+p_esr tinyint,
+p_cue tinyint,
+primary key(inv_id,p_pid)
+);
+
+//table symptoms
+
+
+create table symptoms(
+sym_id varchar(12) not null,
+p_pid varchar(12) not null,
+created date not null,
+p_sym1 varchar(255),
+p_sym2 varchar(255),
+p_sym3 varchar(255),
+p_sym4 varchar(255),
+p_sym5 varchar(255),
+p_sym6 varchar(255),
+primary key(sym_id,p_pid)
+);
+
+
+//table diagnosis
+
+create table diagnosis(
+diag_id int not null,
+p_pid varchar(12),
+created date not null,
+p_prediag varchar(255),
+p_curr_diag varchar(255),
+primary key(diag_id,p_pid)
+);
+
+//table images
+create table images(
+p_pid varchar(12) not null,
+image_path_small text,
+image_path_medium text,
+primary key(p_pid)
+);
+
+//table medicine
+create table medicine(
+medicine_code varchar(10) not null,
+medicine_name varchar(255),
+medicine_remain int,
+medicine_req int,
+primary key(medicine_code)
+);
