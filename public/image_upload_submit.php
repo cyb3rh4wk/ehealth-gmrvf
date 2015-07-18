@@ -1,36 +1,27 @@
 <?php
+error_reporting(E_ALL);
+ini_set('display_errors', 'on');
+
 include('./functions.php');
+include('./connect.php');
 
 /*defined settings - start*/
 ini_set("memory_limit", "99M");
 ini_set('post_max_size', '20M');
 ini_set('max_execution_time', 600);
-define('IMAGE_SMALL_DIR', '../../public/uploads/small/');
-define('IMAGE_SMALL_SIZE', 50);
-define('IMAGE_MEDIUM_DIR', '../../public/uploads/medium/');
+// define('IMAGE_SMALL_DIR', './uploads/small/');
+// define('IMAGE_SMALL_SIZE', 50);
+define('IMAGE_MEDIUM_DIR', './uploads/');
 define('IMAGE_MEDIUM_SIZE', 250);
 /*defined settings - end*/
 
 $pid = isset($_POST['image_pid']) ? $_POST['image_pid'] : null;
 
-//Connect to database
-//Database credentials
-$db_server = "localhost";
-$db_dbname = "health";
-$db_uname = "root";
-$db_password = "krishna";
-
-// Connect to database
-$conn = new mysqli($db_server, $db_uname, $db_password, $db_dbname);
-if($conn->connect_error)	{
-	die("Connection Failed: " . $conn->connect_error);
-}
-$mysql_error = 0;
 
 if(isset($_FILES['image_upload_file'])){
-	$output['status']=FALSE;
+	$output['status'] = FALSE;
 	set_time_limit(0);
-	$allowedImageType = array("image/gif",   "image/jpeg",   "image/pjpeg",   "image/png",   "image/x-png"  );
+	$allowedImageType = array("image/gif", "image/jpeg", "image/pjpeg", "image/png", "image/x-png");
 	
 	if ($_FILES['image_upload_file']["error"] > 0) {
 		$output['error']= "Error in File";
@@ -42,7 +33,6 @@ if(isset($_FILES['image_upload_file'])){
 		$output['error']= "You can upload file size up to 4 MB";
 	} else {
 		/*create directory with 777 permission if not exist - start*/
-		createDir(IMAGE_SMALL_DIR);
 		createDir(IMAGE_MEDIUM_DIR);
 		/*create directory with 777 permission if not exist - end*/
 		$path[0] = $_FILES['image_upload_file']['tmp_name'];
@@ -51,26 +41,16 @@ if(isset($_FILES['image_upload_file'])){
 		$desiredExt='jpg';
 		$fileNameNew = $pid . "." . $desiredExt;
 		$path[1] = IMAGE_MEDIUM_DIR . $fileNameNew;
-		$path[2] = IMAGE_SMALL_DIR . $fileNameNew;
+		// $path[2] = IMAGE_SMALL_DIR . $fileNameNew;
 		
 		if (createThumb($path[0], $path[1], $fileType, IMAGE_MEDIUM_SIZE, IMAGE_MEDIUM_SIZE,IMAGE_MEDIUM_SIZE)) {
 			
-			if (createThumb($path[1], $path[2],$desiredExt, IMAGE_SMALL_SIZE, IMAGE_SMALL_SIZE,IMAGE_SMALL_SIZE)) {
-				$output['status']=TRUE;
+			// if (createThumb($path[1], $path[2],$desiredExt, IMAGE_SMALL_SIZE, IMAGE_SMALL_SIZE,IMAGE_SMALL_SIZE)) {
+				$output['status'] = TRUE;
 				$output['image_medium']= $path[1];
 				$output['image_small']= $path[2];
-			}
+			// }
 		}
-		/*
-		$sql_image = "INSERT INTO images(p_pid, image_path_small, image_path_medium) VALUES('" . $pid . "','" . $path[2] . "'.'" . $path[1] . "');";
-
-		if($conn->query($sql_image) === TRUE)	{
-			$mysql_error = 0;
-		} else	{
-			$mysql_error = 1;
-			echo "Error: " . $sql_image . "<br />" . $conn->error;
-		}
-		*/
 	}
 	echo json_encode($output);
 }

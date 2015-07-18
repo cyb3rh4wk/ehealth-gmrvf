@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <?php
 	session_start();
-	$username = $_SESSION['username'];
+	$username = isset($_SESSION['username']) ? $_SESSION['username'] : null;
 	error_reporting(E_ALL);
 	ini_set('display_errors', 1);
 
@@ -46,9 +46,10 @@
 <head>
 	<meta charset="utf-8">
 	
-	<link rel="stylesheet" type="text/css" href="../../public/css/bootstrap.min.css">
-	<link rel="stylesheet" type="text/css" href="../../public/css/style.css">
-	<!-- <link rel="stylesheet" type="text/css" href="./css/bootstrap.min.css"> -->
+	<!-- <link rel="stylesheet" type="text/css" href="../../public/css/bootstrap.min.css"> -->
+	<!-- <link rel="stylesheet" type="text/css" href="../../public/css/style.css"> -->
+	<link rel="stylesheet" type="text/css" href="./css/style.css">
+	<link rel="stylesheet" type="text/css" href="./css/bootstrap.min.css">
 	<link rel="icon" href="favicon.ico" type="image/x-icon">
 	<title>Contact Us - GMRVF</title>
 </head>
@@ -68,7 +69,7 @@
 				</button>
 				<!-- <a href="./index.php" class="navbar-brand">GMR Foundation</a> -->
 				<a class="navbar-brand" href="./index.php">
-					<img src="../../public/images/logo.png" alt="Logo">
+					<img src="./images/logo.png" alt="Logo">
 				</a>
 			</div>
 			<div class="navbar-collapse collapse" id="navbar-collapse-main">
@@ -78,11 +79,19 @@
 					<li class="dropdown">
 						<a href="#" class="dropdown-toggle" data-toggle="dropdown">Services<b class="caret"></b></a>
 						<ul class="dropdown-menu">
-							<li><a href="./patient.php">Patient Data</a></li>
+							<li><a href="./patient.php">New Patient</a></li>
+              				<li><a href="./ex-patient.php">Exisiting Patient</a></li>
+              				<li><a href="./id.php">Generate ID</a></li>
 							<li class="divider"></li>
 							<li><a href="./medicine.php">Medicine Data</a></li>
 							<li class="divider"></li>
-							<li><a href="#">Analysis</a></li>
+							<li class="dropdown-submenu">
+							<a href="#" class="dropdown-toggle" data-toggle="dropdown">Analysis</a>
+								<ul class="dropdown-menu">
+								  <li><a href="./analysis_village.php">Village vs Gender</a></li>
+								  <li><a href="./analysis_disease.php">Disease vs Gender</a></li>
+								</ul>
+							</li>
 						</ul>
 					</li>
 					<li class="active"><a href="./contact.php">Contact</a></li>
@@ -109,7 +118,7 @@
 											</div>
 										</li>
 										<li class="divider"></li>
-										<li class="btn btn-default btn-block"><center><a href="#">Settings</a></center></li>
+										<li class="btn btn-default btn-block"><center><a href="./settings.php">Settings</a></center></li>
 										<li class="divider"></li>
 										<li>
 											<div class="navbar-login">
@@ -146,7 +155,7 @@
   <div class="panel panel-primary" role="panel">
     <div class="panel-heading"><h3>Contact</h3></div>
     <div class="panel-body">
-      <div class="table">
+      <table style="font-size:14px;">
       	<tr>
       		<td>
 		      	<address>
@@ -158,6 +167,8 @@
 					<b>E-Mail</b>: VenkataNarayana.Dakkina@gmrgroup.in
 				</address>
 			</td>
+		</tr>
+		<tr>
 			<hr>
 			<td>
 		      	<address>
@@ -171,7 +182,7 @@
 				</address>
 			</td>
 		</tr>
-      </div>
+      </table>
     </div>
   </div>
 </div>
@@ -187,10 +198,10 @@
 </div>
 
 <!-- End Footer -->
-<script src="../../public/js/jquery.js"></script>
-<script src="../../public/js/bootstrap.min.js" type="text/javascript"></script>
-<!-- <script src="./js/jquery.js"></script>
-<script src="./js/bootstrap.min.js" type="text/javascript"></script> -->
-<!-- <script src="../../public/js/dropdown.js" type="text/javascript"></script> -->
+<!-- <script src="../../public/js/jquery.js"></script>
+<script src="../../public/js/bootstrap.min.js" type="text/javascript"></script> -->
+<script src="./js/jquery.js"></script>
+<script src="./js/bootstrap.min.js" type="text/javascript"></script>
+<!-- <script src="./js/dropdown.js" type="text/javascript"></script> -->
 </body>
 </html>

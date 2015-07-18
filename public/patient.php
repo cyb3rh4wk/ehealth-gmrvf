@@ -6,18 +6,19 @@ session_start();
 if(!isset($_SESSION['login']) && $_SESSION['login'] == "")  {
   header("Location:index.php");
 }
-$username = $_SESSION['username'];
+$username = isset($_SESSION['username']) ? $_SESSION['username'] : null;
+
 ?>
 <html lang="en">
 <head>
   <meta charset="utf-8">
 
-  <!-- <link rel="stylesheet" type="text/css" href="./css/bootstrap.min.css"> -->
-  <!-- <link rel="stylesheet" type="text/css" href="./css/style.css"> -->
-  <link rel="stylesheet" type="text/css" href="../../public/css/bootstrap.min.css">
-  <link rel="stylesheet" type="text/css" href="../../public/css/style.css">
+  <link rel="stylesheet" type="text/css" href="./css/bootstrap.min.css">
+  <link rel="stylesheet" type="text/css" href="./css/style.css">
+  <!-- <link rel="stylesheet" type="text/css" href="../../public/css/bootstrap.min.css"> -->
+  <!-- <link rel="stylesheet" type="text/css" href="../../public/css/style.css"> -->
   <link rel="icon" href="favicon.ico" type="image/x-icon">
-  <title>Patient - GMRVF</title>
+  <title>New Patient - GMRVF</title>
 </head>
 
 <body>  
@@ -34,7 +35,7 @@ $username = $_SESSION['username'];
         </button>
         <!-- <a href="./index.php" class="navbar-brand">GMR Foundation</a> -->
         <a class="navbar-brand" href="./index.php">
-          <img src="../../public/images/logo.png" alt="Logo">
+          <img src="./images/logo.png" alt="Logo">
         </a>
         
       </div>
@@ -45,11 +46,19 @@ $username = $_SESSION['username'];
           <li class="dropdown active">
             <a href="#" class="dropdown-toggle" data-toggle="dropdown">Services<b class="caret"></b></a>
             <ul class="dropdown-menu">
-              <li class="active"><a href="./patient.php">Patient Data</a></li>
+              <li class="active"><a href="./patient.php">New Patient</a></li>
+              <li><a href="./ex-patient.php">Exisiting Patient</a></li>
+              <li><a href="./id.php">Generate ID</a></li>
               <li class="divider"></li>
               <li><a href="./medicine.php">Medicine Data</a></li>
               <li class="divider"></li>
-              <li><a href="#">Analysis</a></li>
+              <li class="dropdown-submenu">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown">Analysis</a>
+                <ul class="dropdown-menu">
+                  <li><a href="./analysis_village.php">Village vs Gender</a></li>
+                  <li><a href="./analysis_disease.php">Disease vs Gender</a></li>
+                </ul>
+              </li>
             </ul>
           </li>
           <li><a href="./contact.php">Contact</a></li>
@@ -74,7 +83,7 @@ $username = $_SESSION['username'];
                 </div>
               </li>
               <li class="divider"></li>
-              <li class="btn btn-default btn-block"><center><a href="#">Settings</a></center></li>
+              <li class="btn btn-default btn-block"><center><a href="./settings.php">Settings</a></center></li>
               <li class="divider"></li>
               <li>
                 <div class="navbar-login">
@@ -125,18 +134,21 @@ $username = $_SESSION['username'];
                 <video class="img-rounded" id="video" width="360" height="180" autoplay></video>
               </div>
               <div class="row">
-                <center><button class="btn btn-default" id="snap">Say Cheese!!!</button></center>
+                <center><button class="btn btn-default" id="snap">Take a Photo</button></center>
               </div>
               <div class="row">
-				<center>
-					<canvas class="img-rounded" id="canvas" width="280" height="160"></canvas>
-				</center>
+        				<center>
+        					<canvas class="img-rounded" id="captured" width="280" height="160"></canvas>
+        				</center>
+              </div>
+              <div class="row">
+                <center><button class="btn btn-default" id="new">Take Another???</button></center>
               </div>
               <script>
                 // Put event listeners into place
                 window.addEventListener("DOMContentLoaded", function() {
                   // Grab elements, create settings, etc.
-                  var canvas = document.getElementById("canvas"),
+                  var canvas = document.getElementById("captured"),
                   context = canvas.getContext("2d"),
                   video = document.getElementById("video"),
                   videoObj = { "video": true },
@@ -153,7 +165,7 @@ $username = $_SESSION['username'];
                 } 
                 else if(navigator.webkitGetUserMedia) { // WebKit-prefixed
                   navigator.webkitGetUserMedia(videoObj, function(stream){
-                  video.src = window.webkitURL.createObjectURL(stream);
+                  video.src = window.URL.createObjectURL(stream);
                   video.play();
                   }, errBack);
                 }
@@ -165,6 +177,34 @@ $username = $_SESSION['username'];
                 // Trigger photo take
                 document.getElementById("snap").addEventListener("click", function() {
                  context.drawImage(video, 0, 0, 240, 160);
+                 // Little effects
+                  $('#video').fadeOut('slow');
+                  $('#captured').fadeIn('slow');
+                  $('#snap').hide();
+                  $('#new').show();
+                  // Allso show upload button
+                  //$('#upload').show();
+                });
+                // Capture New Photo
+                document.getElementById("new").addEventListener("click", function() {
+                  $('#video').fadeIn('slow');
+                  $('#canvas').fadeOut('slow');
+                  $('#snap').show();
+                  $('#new').hide();
+                });
+                document.getElementById("snap").addEventListener("click", function(){
+                  var dataUrl = canvas.toDataURL();
+                  var pid = document.getElementById("pid").value;
+                  $.ajax({
+                    type: "POST",
+                    url: "captureSave.php",
+                    data: { 
+                      imgBase64 : dataUrl,
+                      pid : pid
+                    }
+                    }).done(function(msg) {
+                      console.log('saved');
+                  });
                 });
                   }
                 }, false);
@@ -178,27 +218,27 @@ $username = $_SESSION['username'];
                 </div>
               </div>
               <div class="row col-lg-12">
-				<div id="imgContainer">
-					<form enctype="multipart/form-data" action="image_upload_submit.php" method="post" name="image_upload_form" id="image_upload_form">
-						<div id="imgArea"><img src="../../public/images/default.png">
-							<div class="progressBar">
-								<div class="bar"></div>
-								<div class="percent">0%</div>
-							</div>
-							<div id="imgChange"><span>Upload Photo</span>
-								<input type="file" accept="image/*" name="image_upload_file" id="image_upload_file">
-							</div>
-						</div>
-						<br /><br />
-						<div class="row">
-							<div class="form-group">
-								<div class="col-lg-12">
-									<input type="text" class="form-control" id="image_pid" name="image_pid" placeholder="Public ID" />
-								</div>
-							</div>
-						</div>
-					</form>
-				</div>
+        				<div id="imgContainer">
+        					<form enctype="multipart/form-data" action="image_upload_submit.php" method="post" name="image_upload_form" id="image_upload_form">
+        						<div id="imgArea"><img src="./images/default.png">
+        							<div class="progressBar">
+        								<div class="bar"></div>
+        								<div class="percent">0%</div>
+        							</div>
+        							<div id="imgChange"><span>Upload Photo</span>
+        								<input type="file" accept="image/*" name="image_upload_file" id="image_upload_file">
+        							</div>
+        						</div>
+        						<br /><br />
+        						<div class="row">
+        							<div class="form-group">
+        								<div class="col-lg-12">
+        									<input type="text" class="form-control" id="image_pid" name="image_pid" placeholder="Public ID" />
+        								</div>
+        							</div>
+        						</div>
+        					</form>
+        				</div>
               </div>
             </div>
           </div>
@@ -229,7 +269,7 @@ $username = $_SESSION['username'];
                   <div class="row">
                     <div class="form-group">
                       <div class="col-lg-6">
-                        <input type="text" id="pid" class="form-control" name="pid" placeholder="Public ID" />
+                        <input type="text" id="pid" class="form-control" name="pid" placeholder="Public ID" required/>
                       </div>
                     </div>
                   </div>
@@ -256,8 +296,8 @@ $username = $_SESSION['username'];
                   <div class="row">
                     <div class="form-group">
                       <div class="col-lg-4">
-                        <!-- <input type="date" class="form-control" name="dob" placeholder="D.O.B [DD-MM-YYYY]" /> -->
-                        <input type="date" class="form-control" name="dob"/>
+                        <input type="text" class="form-control" name="dob" placeholder="D.O.B [ YYYY-MM-DD ]" />
+                        <!-- <input type="date" class="form-control" name="dob"/> -->
                       </div>
                     </div>
                   </div>
@@ -299,9 +339,6 @@ $username = $_SESSION['username'];
                   </div>
                   <div class="row">
                     <div class="form-group">
-                      <div class="col-lg-4">
-                        <input type="text" class="form-control" name="contact_landline" placeholder="Landline" />
-                      </div>
                       <div class="col-lg-4">
                         <div class="input-group">
                         <div class="input-group-addon">
@@ -535,7 +572,7 @@ $username = $_SESSION['username'];
                   <div class="row">
                     <div class="form-group">
                       <div class="col-lg-12">
-                        <textarea class="form-control" name="current_diagnosis" placeholder="Current Diagnosis" rows="3"></textarea>
+                        <textarea class="form-control" name="current_diagnosis" placeholder="Current Diagnosis" rows="3" required></textarea>
                       </div>
                     </div>
                   </div>
@@ -616,14 +653,14 @@ $username = $_SESSION['username'];
 </div>
 
 <!-- End Footer -->
-<script src="../../public/js/jquery.js"></script>
+<!-- <script src="../../public/js/jquery.js"></script>
 <script src="../../public/js/bootstrap.min.js" type="text/javascript"></script>
 <script src="../../public/js/custom.js" type="text/javascript"></script>
-<script src="../../public/js/jquery.form.js" type="text/javascript"></script>
-<!-- <script src="./js/jquery.js"></script>
+<script src="../../public/js/jquery.form.js" type="text/javascript"></script> -->
+<script src="./js/jquery.js"></script>
 <script src="./js/bootstrap.min.js" type="text/javascript"></script>
 <script src="./js/jquery.form.js" type="text/javascript"></script>
-<script src="./js/custom.js" type="text/javascript"></script> -->
-<!-- <script src="../../public/js/dropdown.js" type="text/javascript"></script> -->
+<script src="./js/custom.js" type="text/javascript"></script>
+<!-- <script src="./js/dropdown.js" type="text/javascript"></script> -->
 </body>
 </html>

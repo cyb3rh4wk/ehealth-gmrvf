@@ -7,40 +7,58 @@ include('./connect.php');
 
 session_start();
 if(!isset($_SESSION['login']) && $_SESSION['login'] == "")  {
-  echo '
-    <script>
-      alert("Please login to continue...");
-    </script>
-  ';
   header("Location:index.php");
 }
-$username = $_SESSION['username'];
+$username = isset($_SESSION['username']) ? $_SESSION['username'] : null;
 
-$medicine_code = isset($_POST['medicine_code']) ? $_POST['medicine_code'] : null ;
-$medicine_name = isset($_POST['medicine_name']) ? $_POST['medicine_name'] : null ;
-$medicine_remain = isset($_POST['medicine_qty']) ? $_POST['medicine_qty'] : null ;
+include('./connect.php');
 
-$sql_medicine = "INSERT INTO medicine(medicine_code, medicine_name, medicine_remain) VALUES('" 
-				. $medicine_code . "','"
-				. $medicine_name . "','"
-				. $medicine_remain . "');";
-				
-if($conn->query($sql_medicine) === TRUE)	{
-	$mysql_error = 0;
-} else	{
-	$mysql_error = 1;
-	echo "Error: " . $sql_medicine . "<br />" . $conn->error;
+$medicine_code;
+$action;
+$med_data;
+
+foreach($_POST as $key => $value)	{
+	if($value != '')	{
+		// echo "Key: " . $key . " => " . $value . " Type: " . gettype($value);
+		// echo "<br />";
+		$medicine_code = explode('_', $key)[0];
+		$action = explode('_', $key)[1];
+		
+		$sql_get_med = "SELECT medicine_code, medicine_name, medicine_remain FROM medicine WHERE medicine_code='" . $medicine_code . "';";
+		$result = $conn->query($sql_get_med);
+		if($result->num_rows > 0)	{
+			$med_data = $result->fetch_assoc();
+		}
+		// Add if additional quantity added
+		if($action == 'req')	{
+			$newCount = $med_data['medicine_remain'] + $value;
+		} else if ($action == 'used') {	// Subtract if qty used
+			// If the qty is not reduced to negative qty
+			if(($med_data['medicine_remain'] - $value) > 0)
+				$newCount = $med_data['medicine_remain'] - $value;
+			else
+				$newCount = 0;
+		}
+		// Store to database
+		$sql_medicine_update = "UPDATE medicine SET medicine_remain='" . $newCount . "' WHERE medicine_code='" . $medicine_code . "';";
+		if ($conn->query($sql_medicine_update) === TRUE) {
+		    $mysql_error = 0;
+		} else {
+		    $mysql_error = 1;
+		}
+	}
 }
+
 ?>
 
 <html lang="en">
 <head>
   <meta charset="utf-8">
 
-<!--   <link rel="stylesheet" type="text/css" href="./css/bootstrap.min.css"> -->
-<!--   <link rel="stylesheet" type="text/css" href="./css/style.css"> -->
-  <link rel="stylesheet" type="text/css" href="../../public/css/bootstrap.min.css">
-  <link rel="stylesheet" type="text/css" href="../../public/css/style.css">
+  <link rel="stylesheet" type="text/css" href="./css/bootstrap.min.css">
+  <link rel="stylesheet" type="text/css" href="./css/style.css">
+  <!-- <link rel="stylesheet" type="text/css" href="../../public/css/bootstrap.min.css"> -->
+  <!-- <link rel="stylesheet" type="text/css" href="../../public/css/style.css"> -->
   <link rel="icon" href="favicon.ico" type="image/x-icon">
   <title>Medicine - GMRVF</title>
 </head>
@@ -59,7 +77,7 @@ if($conn->query($sql_medicine) === TRUE)	{
         </button>
         <!-- <a href="./index.php" class="navbar-brand">GMR Foundation</a> -->
         <a class="navbar-brand" href="./index.php">
-          <img src="../../public/images/logo.png" alt="Logo">
+          <img src="./images/logo.png" alt="Logo">
         </a>
         
       </div>
@@ -70,11 +88,19 @@ if($conn->query($sql_medicine) === TRUE)	{
           <li class="dropdown active">
             <a href="#" class="dropdown-toggle" data-toggle="dropdown">Services<b class="caret"></b></a>
             <ul class="dropdown-menu">
-              <li><a href="./patient.php">Patient Data</a></li>
+              <li><a href="./patient.php">New Patient</a></li>
+              <li><a href="./ex-patient.php">Exisiting Patient</a></li>
+              <li><a href="./id.php">Generate ID</a></li>
               <li class="divider"></li>
               <li class="active"><a href="./medicine.php">Medicine Data</a></li>
               <li class="divider"></li>
-              <li><a href="#">Analysis</a></li>
+              <li class="dropdown-submenu">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown">Analysis</a>
+                <ul class="dropdown-menu">
+                  <li><a href="./analysis_village.php">Village vs Gender</a></li>
+                  <li><a href="./analysis_disease.php">Disease vs Gender</a></li>
+                </ul>
+              </li>
             </ul>
           </li>
           <li><a href="./contact.php">Contact</a></li>
@@ -99,7 +125,7 @@ if($conn->query($sql_medicine) === TRUE)	{
                 </div>
               </li>
               <li class="divider"></li>
-              <li class="btn btn-default btn-block"><center><a href="#">Settings</a></center></li>
+              <li class="btn btn-default btn-block"><center><a href="./settings.php">Settings</a></center></li>
               <li class="divider"></li>
               <li>
                 <div class="navbar-login">
@@ -151,11 +177,11 @@ if($conn->query($sql_medicine) === TRUE)	{
 				<?php
 					if($mysql_error == 0)	{
 				?>
-					<h4>New Medicine has been added to your Inventory</h4>
+					<h4>Inventory has been Updated!!!</h4>
 				<?php
 					} else {
 				?>
-					<h4>Problem adding to Inventory :( :(</h4>
+					<h4>Problem updaing Inventory :( :(</h4>
 				<?php
 					}
 				?>
@@ -179,14 +205,14 @@ if($conn->query($sql_medicine) === TRUE)	{
 </div>
 
 <!-- End Footer -->
-<script src="../../public/js/jquery.js"></script>
+<!-- <script src="../../public/js/jquery.js"></script>
 <script src="../../public/js/bootstrap.min.js" type="text/javascript"></script>
 <script src="../../public/js/custom.js" type="text/javascript"></script>
-<script src="../../public/js/jquery.form.js" type="text/javascript"></script>
-<!-- <script src="./js/jquery.js"></script>
+<script src="../../public/js/jquery.form.js" type="text/javascript"></script> -->
+<script src="./js/jquery.js"></script>
 <script src="./js/bootstrap.min.js" type="text/javascript"></script>
 <script src="./js/jquery.form.js" type="text/javascript"></script>
-<script src="./js/custom.js" type="text/javascript"></script> -->
-<!-- <script src="../../public/js/dropdown.js" type="text/javascript"></script> -->
+<script src="./js/custom.js" type="text/javascript"></script>
+<!-- <script src="./js/dropdown.js" type="text/javascript"></script> -->
 </body>
 </html>

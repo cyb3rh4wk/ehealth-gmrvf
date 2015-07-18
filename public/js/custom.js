@@ -3,6 +3,9 @@ $(document).ready(function()	{
 	var counter = 6;
 	var counter_med = 1;
 	var $inputs = $("#pid #image_pid");
+
+	//hide the take another photo button initially
+	$('#new').hide();
 	
 	$inputs.keyup(function()	{
 		$inputs.val($(this).val());
@@ -72,7 +75,7 @@ $(document).ready(function()	{
 				percent.html(percentVal);
 			},
 			success: function(html, statusText, xhr, $form) {		
-				obj = $.parseJSON(html);	
+				obj = $.parseJSON(html);
 				if(obj.status){		
 					var percentVal = '100%';
 					bar.width(percentVal)
@@ -92,5 +95,13 @@ $(document).ready(function()	{
 		var value = $(this).val();
 		$("#image_pid").val(value);
 	}).keyup();
-	
 });
+
+function printPage()  {
+	var printContent = document.getElementById("printArea").innerHTML;
+	var originalContent = document.body.innerHTML;
+
+	document.body.innerHTML = printContent;
+	window.print();
+	document.body.innerHTML = originalContent;
+}

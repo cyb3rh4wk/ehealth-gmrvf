@@ -1,0 +1,4 @@
+For males in villages:
+	select p_address_street,count(p_sex) from patient where p_sex=1 group by(p_address_street)
+For females in villages:
+	select p_address_street,count(p_sex) from patient where p_sex=2 group by(p_address_street)

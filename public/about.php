@@ -1,13 +1,12 @@
 <!DOCTYPE html>
 <?php
-
 	session_start();
 	$username = isset($_SESSION['username']) ? $_SESSION['username'] : null;
 	error_reporting(E_ALL);
+	ini_set('display_errors', 1);
 
 	include('./connect.php');
 	
-	ini_set('display_errors', 1);
 	if(isset($_POST['username']) && isset($_POST['password']))	{
 		// Login credentials
 		$user = isset($_POST['username']) ? $_POST['username'] : null;
@@ -47,20 +46,22 @@
 <head>
 	<meta charset="utf-8">
 	
-	<link rel="stylesheet" type="text/css" href="./css/bootstrap.min.css">
-	<link rel="stylesheet" type="text/css" href="./css/style.css">
 	<!-- <link rel="stylesheet" type="text/css" href="../../public/css/bootstrap.min.css"> -->
 	<!-- <link rel="stylesheet" type="text/css" href="../../public/css/style.css"> -->
+	<link rel="stylesheet" type="text/css" href="./css/bootstrap.min.css">
+	<link rel="stylesheet" type="text/css" href="./css/style.css">
 	<link rel="icon" href="favicon.ico" type="image/x-icon">
-	<title>Home - GMRVF</title>
+	<title>About Us - GMRVF</title>
+	<style type="text/css">
+		table, th, td {
+		    border: 1px solid black;
+		    border-collapse: collapse;
+		}
+		th, td {
+		    padding: 5px;
+		}
+	</style>
 </head>
-<style>
-.carousel-inner > .item > img,
-.carousel-inner > .item > a > img {
-  width: 60%;
-  margin: auto;
-}
-</style>
 
 <body>
 	
@@ -75,14 +76,15 @@
 					<span class="icon-bar"></span>
 					<span class="icon-bar"></span>
 				</button>
+				<!-- <a href="./index.php" class="navbar-brand">GMR Foundation</a> -->
 				<a class="navbar-brand" href="./index.php">
 					<img src="./images/logo.png" alt="Logo">
 				</a>
 			</div>
 			<div class="navbar-collapse collapse" id="navbar-collapse-main">
 				<ul class="nav navbar-nav">
-					<li class="active"><a href="./index.php">Home</a></li>
-					<li><a href="./about.php">About Us</a></li>
+					<li><a href="./index.php">Home</a></li>
+					<li class="active"><a href="./about.php">About Us</a></li>
 					<li class="dropdown">
 						<a href="#" class="dropdown-toggle" data-toggle="dropdown">Services<b class="caret"></b></a>
 						<ul class="dropdown-menu">
@@ -142,6 +144,7 @@
 								</li>';
 						}
 					?>
+					
 				</ul>
 				<form class="form-inline" action="<?php echo $_SERVER["PHP_SELF"]; ?>" method="post">
 					<div class="navbar-right navbar-form"> 
@@ -155,123 +158,153 @@
 	</div>
 </nav>
 
-<!-- Body Starts Here -->
+<!-- Content Start -->
 
-<!-- Carousel Starts Here -->
-
-<div class="container">
-  <br>
-  <div id="myCarousel" class="carousel slide" data-ride="carousel">
-    <!-- Indicators -->
-    <ol class="carousel-indicators">
-      <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
-      <li data-target="#myCarousel" data-slide-to="1"></li>
-      <li data-target="#myCarousel" data-slide-to="2"></li>
-    </ol>
-
-    <!-- Wrapper for slides -->
-    <div class="carousel-inner" role="listbox">
-      <div class="item active">
-        <img src="./images/pic-1.jpg" alt="PIC-1" width="720" height="500">
-      </div>
-
-      <div class="item">
-        <img src="./images/pic-2.jpg" alt="PIC-2" width="720" height="500">
-      </div>
-    
-      <div class="item">
-        <img src="./images/pic-3.jpg" alt="PIC-3" width="720" height="500">
-      </div>
-    </div>
-
-    <!-- Left and right controls -->
-    <a class="left carousel-control" href="#myCarousel" role="button" data-slide="prev">
-      <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
-      <span class="sr-only">Previous</span>
-    </a>
-    <a class="right carousel-control" href="#myCarousel" role="button" data-slide="next">
-      <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
-      <span class="sr-only">Next</span>
-    </a>
-  </div>
-</div>
-
-<!-- Carousel Ends Here -->
-
-<br />
-<div class="container">
+<div class="container" >
 	<div class="panel panel-primary" role="panel">
-		<div class="panel-heading"><h3>Home</h3></div>
+		<div class="panel-heading"><h3>About Us</h3></div>
 		<div class="panel-body">
-			<h3 class="text-danger"><b>GMR Varalakshmi Fundation</b></h3>
+			<h3 class="text-danger"><b>Evening Medical Clinics:</b></h3>
 			<div class="row" style="font-size:16px;">
 				<div class="col-lg-12">
 					<p>
-						GMR Varalakshmi Foundation (GMRVF), is the Corporate Social Responsibility arm of the GMR Group. It’s objectives are to develop social infrastructure and enhance the quality of life of communities around the locations that has the Group’s presence. This non-profit (Section 25) company has its own professional staff selected from top academic and social work institutions, and is Governed by Group Chairman, GMR Group.
+						In 2005, when Mobile Medical Unit(MMU) was started by GMRVF for elderly people, people of the age groups used to visit MMU's for availing health services. The treatment cases were around 100-150 per day, so the staff could not manage the crwod and neither were they in a position to ask people other than the elderly people not to come to the MMU's. Because at that time people had just started developing trust towards MMU as well as GMR Varalakshmi Foundation.
 					</p>
 					<p>
-						<ul>
-							<li>Education</li>
-							<li>Health, Hygiene & Sanitation</li>
-							<li>Empowerment & Livelihoods</li>
-							<li>Community Development</li>
-						</ul>
+						As a solution for this predicament, GMR Varalakshmi Foundation took the decision to run an Evening Medical Clinic between 5:00 PM to 7:30 PM for providing health services to the people aged below 60.In 2007, Evening Medical CLinics were started in 4 Villages(Airport Colony, Shamshabad, Gollapally, Mamidipally) where people lost their land during acquisition for Rajiv Gandhi International Airport, Hyderabad.Later on special request from Hameedullanagar which had partially lost land to Airport in 2009, The services were extended to this village also.
 					</p>
-					<br />
-					<h4 class="text-success"><b>GMRVF Vision</b></h4>
 					<p>
-						To make sustainable impact on the human development of under-served communities through initiatives in education, health and livelihoods.
+						All these villages(except Shamshabad) have no qualified Medical practitioner and there were only RMP's practicing in their village. The nearest PHC is also in Shamshabad which is quite far from other villages.
 					</p>
-					<br />
-					<h4 class="text-success"><b>Education</b></h4>
-					<p>
-						The Foundation aims to make quality primary, secondary and tertiary education accessible to all. Towards this, GMRVF focuses on 
-						<br />
-						<br />
-						<span class="text-primary">Educational Institutions:</span>
-						<ul>
-							<li>GMR Institute of Technology</li>
-							<li>Sri GCSR Degree College</li>
-							<li>GMR Varalakshmi DAV Public School</li>
-							<li>Seethamahalakshmi DAV Public School</li>
-						</ul>
-						<span class="text-primary">Strengthening Education In Communities:</span><br />
-						The Foundation undertakes various educational initiatives in the communities it works with. It also collaborates with the Government in promoting its endeavors to strengthen and improve quality of pre-school and school education...
-						<br />
+				</div>
+			</div>
+			<h3 class="text-danger"><b>Objective:</b></h3>
+			<div class="row" style="font-size:16px;">
+				<div class="col-lg-12">
+					1.To provide basic health check-ups, treatment/medicines, counselling free of cost to the general population at their doorstep.
+				<br>
+					2.To provide referral services
+				</div>
+			</div>
+			<h3 class="text-danger"><b>Clinic timing and Coverage:</b></h3>
+			<div class="row" style="font-size:16px;">
+				<div class="col-lg-12">
+					<p>The doctor and the pharmacist who run the MMU,visit the clinics in the evening and render health services.Evening medical clinics have been running as per the following weekly schedule between 5pm to 7:30 pm at GMRVF's Bhavitha library premises.
+					The following table shows schedule of Evening medical clinics:
 					</p>
-					<br />
-					<h4 class="text-success"><b>Health, Hygiene and Sanitation:</b></h4>
+				</div>
+			</div>
+			<div class="row" style="font-size:16px;">
+				<div class="col-lg-8">
+					<table style="width:100%; font-size:16px;">
+					  <tr>
+					    <th>Days</th>
+					    <th>Name of the village</th>		 
+					  </tr>
+					  <tr>
+					    <td>Monday</td>
+					    <td>Airport colony</td>		 
+					  </tr>
+					  <tr>
+					    <td>Tuesday</td>
+					    <td>Shamshabad</td>		  
+					  </tr>
+					  <tr>
+					    <td>Wednesday</td>
+					    <td>Mamidipally</td>		
+					  </tr>
+					   <tr>
+					    <td>Thurssday</td>
+					    <td>Gollapally</td>		
+					  </tr>
+					   <tr>
+					    <td>Friday</td>
+					    <td>Hamedullanagar</td>		
+					  </tr>
+					</table>
+				</div>
+			</div>
+			<h3 class="text-danger"><b>Coverage:</b></h3>
+			<div class="row" style="font-size:16px;">
+				<div class="col-lg-8">
+					<table style="width:100%">
+					  <tr>
+					    <th>Year</th>
+					    <th>Number of villages covered</th>	
+					    <th>Number of beneficiaries</th>	
+					    <th>Nmber of referrals</th>
+					  </tr>
+					  <tr>
+					    <td>2007-2008</td>
+					    <td>3</td>		
+					    <td>7151</td>
+						<td>694</td>
+					  </tr>
+					  <tr>
+						<td>2008-2009</td>
+					    <td>4</td>		
+					    <td>8330</td>
+						<td>814</td>
+					  </tr>
+					  <tr>
+					    <td>2009-2010</td>
+					    <td>5</td>		
+					    <td>8525</td>
+						<td>713</td>
+					  </tr>
+					   <tr>
+					   <td>2010-2011</td>
+					    <td>5</td>		
+					    <td>9727</td>
+						<td>804</td>
+					  </tr>
+					   <tr>
+					    <td>2011-2012</td>
+					    <td>5</td>		
+					    <td>8956</td>
+						<td>696</td>		
+					  </tr>
+					   <td>Grand total</td>
+					    <td>5</td>		
+					    <td>40,689</td>
+						<td>3721</td>		
+					  </tr>
+					</table>
+				</div>
+			</div>
+			<h3 class="text-danger"><b>Services:</b></h3>
+			<div class="row" style="font-size:16px;">
+				<div class="col-lg-8">
 					<p>
-						<span class="text-primary">Health Care Institutions:</span>
-						<br />
-						The GMR Varalakshmi Foundation started a a 135 bed, Multi-Speciality Hospital at Rajam, Srikakulam Dist, Andhra Pradesh in collaboration with the CARE Hospitals.<br />
-						<span class="text-primary">Strengthening Health Care In Communities:</span>
-						<br />
-						To work towards better health and more healthy lifestyles in the communities where we work.
+						Free services are being provided in Evening medical clinic to all the age groups except elderly person
+						<br></br>
+						1.Health check-ups
+						<br></br>
+						2.Medicines
+						<br></br>
+						3.counselling and 
+						<br></br>
+						4.Referral services(Patients are referred to government/private hospitals where they can get quality service)
 					</p>
-					<br />
-					<h4 class="text-success"><b>Empowerment & Livelihoods:</b></h4>
+				</div>
+			</div>
+			<h3 class="text-danger"><b>Suggestions:</b></h3>
+			<div class="row" style="font-size:16px;">
+				<div class="col-lg-12">
 					<p>
-						To empower unemployed youth through skill training and entrepreneurship development programmes.
-					</p>
-					<br />
-					<h4 class="text-success"><b>Community Development:</b></h4>
-					<p>
-						To improve lives & livelihood through participatory programmes.
-					</p>
-					<br />
-					<h4 class="text-success"><b>CORPORATE SOCIAL RESPONSIBILITY:</b></h4>
-					<p>
-						GMR Group believes Corporates have a special and continuing responsibility towards the society. The grim reality in India is that millions of people still do not have access to basic amenities and live in abject poverty - a situation that cannot be redressed by the Government alone. The business sector needs to understand its corporate-social responsibility and work towards making a difference to society.
+						For any suggestions please <a href="./contact.php">Click Here</a>
 					</p>
 				</div>
 			</div>
 		</div>
 	</div>
 </div>
-<!-- Body Ends Here -->
+
+
+<!-- Content End -->
 
 <!-- Footer start -->
+
 <div id="footer" style="background-color : #FFFFCC;">
 	<div class="container">
 		<p class="muted credit">Copyright &copy 2015 <a href="#">cyb3rh4wk</a>.</p>
@@ -283,6 +316,6 @@
 <script src="../../public/js/bootstrap.min.js" type="text/javascript"></script> -->
 <script src="./js/jquery.js"></script>
 <script src="./js/bootstrap.min.js" type="text/javascript"></script>
-<!-- <script src="./js/dropdown.js" type="text/javascript"></script> -->
+<!-- <script src="../../public/js/dropdown.js" type="text/javascript"></script> -->
 </body>
 </html>
